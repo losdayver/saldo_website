@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title style="text-align: center">Saldo App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1>Saldo App</h1>
+        <hr>
+        <h2>Навигация сайта</h2>
+
+        <ul class="sidebar">
+            <a href="/home">
+                <li>Главная</li>
+            </a>
+
+            <a href="/initial_saldo">
+                <li>Изн. сальдо</li>
+            </a>
+
+            <a href="/payments">
+                <li>Начисления</li>
+            </a>
+
+            <a href="/charges">
+                <li>Платежи</li>
+            </a>
+
+            <a href="/apartment">
+                <li>Отборная ведомость по квартире</li>
+            </a>
+        </ul>
+        <hr>
+    </div>
+
+    <div id="sitecontent">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

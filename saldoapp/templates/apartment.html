@@ -1,0 +1,82 @@
+{% extends 'index.html' %}
+{% load saldoapp_extras %}
+
+{% block content %}
+    <h1 id="sitecontent_text">Начисления</h1>
+    <hr>
+
+    <div class="tableform_box">
+        <h2>Отфильтровать данные</h2>
+        <form action="" method="get" class="tableform">
+
+            <label for="year">Год:</label>
+            <div>
+                <input type="number" name="year" id="year" required="required">
+            </div>
+
+            <label for="apartment_id">Номер квартиры:</label>
+            <div>
+                <input type="number" name="apartment_id" id="apartment_id" required="required">
+            </div>
+
+            <input type="submit" value="Отфильтровать">
+
+        </form>
+    </div>
+
+    {% if error_orccured %}
+                <p style="color: crimson">{{ error_message }}</p>
+            {% endif %}
+
+    <hr>
+    <h2>Таблица начислений</h2>
+
+    {% if filter_used %}
+    <table class="datatable">
+
+        <thead >
+            <tr>
+                <th>Изначальное сальдо</th>
+                <th> </th>
+                <th>Январь</th>
+                <th>Февраль</th>
+                <th>Матр</th>
+                <th>Апрель</th>
+                <th>Май</th>
+                <th>Июнь</th>
+                <th>Июль</th>
+                <th>Август</th>
+                <th>Сентябрь</th>
+                <th>Октябрь</th>
+                <th>Ноябрь</th>
+                <th>Декабрь</th>
+                <th style="border-right: 2px solid black;">Итого</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="2">{{ table|get_value_from_dict:'init_saldo' }}</td>
+                <td>начисления</td>
+                {% for payment in table|get_value_from_dict:'list_payments' %}
+                    <td>{{ payment }}</td>
+                {% endfor %}
+                <td style="border-right: 2px solid black;">{{ table|get_value_from_dict:'payments_sum' }}</td>
+            </tr>
+            <tr>
+                <td>выплаты</td>
+                {% for charge in table|get_value_from_dict:'list_charges' %}
+                    <td>{{ charge }}</td>
+                {% endfor %}
+                <td style="border-right: 2px solid black;">{{ table|get_value_from_dict:'charges_sum' }}</td>
+            </tr>
+            <tr>
+                <th colspan="14" style="text-align: right">Долг по квартире (с учётом изначального сальдо):</th>
+                <th colspan="14">{{ table|get_value_from_dict:'result' }}</th>
+            </tr>
+        </tbody>
+
+    </table>
+    {% else %}
+        <p>Задайте значение фильтра для получения информации по квартире</p>
+    {% endif %}
+{% endblock %}

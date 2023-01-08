@@ -1,0 +1,64 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h1 id="sitecontent_text">Изначальное сальдо</h1>
+    <hr>
+
+    <div class="tableform_box">
+        <h2>Добавить запись в таблицу</h2>
+        <form action="" method="post" class="tableform">
+            {% csrf_token %}
+
+
+            <label for="apartment_id">Номер кваритры: </label>
+            <div>
+            <input type="number" name="apartment_id" id="apartment_id" required="required">
+            </div>
+
+
+            <label for="value">Изначальное сальдо: </label>
+            <div>
+            <input type="text" name="value" id="value" required="required">
+            </div>
+
+            <label for="year">Год: </label>
+            <div>
+            <input type="text" name="year" id="year" required="required">
+            </div>
+
+            <input type="submit" value="добавить запись">
+
+            {% if error_orccured %}
+                <p style="color: crimson">{{ error_message }}</p>
+            {% endif %}
+
+        </form>
+    </div>
+
+    <hr>
+
+    <h2>Таблица изначального сальдо</h2>
+    <table class="datatable">
+
+        <thead>
+            <tr>
+                <th style="text-align: right">Номер квартиры</th>
+                <th>Изначальное сальдо</th>
+                <th>Год</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in table %}
+                <tr>
+                    <th style="text-align: right">
+                        {{item.apartment_id}}
+                    </th>
+                    <td>{{item.value}} ₽</td>
+                    <td>{{item.year}} ₽</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}

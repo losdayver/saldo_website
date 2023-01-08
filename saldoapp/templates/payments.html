@@ -1,0 +1,100 @@
+{% extends 'index.html' %}
+{% load saldoapp_extras %}
+
+{% block content %}
+    <h1 id="sitecontent_text">Начисления</h1>
+    <hr>
+
+    <div class="tableform_box">
+        <h2>Отфильтровать данные</h2>
+        <form action="" method="get" class="tableform">
+
+            <h3>Вывести данные с </h3>
+            <label for="from_year">Год:</label>
+            <div>
+                <input type="number" name="from_year" id="from_year" required="required">
+            </div>
+            <label for="from_month">Месяц:</label>
+            <div>
+                <input type="number" name="from_month" id="from_month" required="required">
+            </div>
+
+            <h3>Вывести данные по </h3>
+            <label for="to_year">Год:</label>
+            <div>
+                <input type="number" name="to_year" id="to_year" required="required">
+            </div>
+            <label for="to_month">Месяц:</label>
+            <div>
+                <input type="number" name="to_month" id="to_month" required="required">
+            </div>
+
+            <input type="submit" value="Отфильтровать">
+
+        </form>
+    </div>
+
+    <div style="margin-left: 40px;" class="tableform_box">
+        <h2>Добавить запись в таблицу</h2>
+        <form action="" method="post" class="tableform">
+            {% csrf_token %}
+
+
+            <label for="saldo_id">Укажите номер кваритры: </label>
+            <div>
+                <input type="number" name="saldo_id" id="saldo_id" required="required">
+            </div>
+
+            <label for="value">Укажите сумму начисления: </label>
+            <div>
+                <input type="text" name="value" id="value" required="required">
+            </div>
+
+            <label for="year">Укажите год: </label>
+            <div>
+                <input type="number" name="year" id="year" required="required">
+            </div>
+
+            <label for="month">Укажите месяц: </label>
+            <div>
+                <input type="number" name="month" id="month" required="required">
+            </div>
+
+            <input type="submit" value="добавить запись">
+
+        </form>
+    </div>
+
+    {% if error_orccured %}
+                <p style="color: crimson">{{ error_message }}</p>
+            {% endif %}
+
+    <hr>
+
+    <h2>Таблица начислений</h2>
+    <table class="datatable">
+
+        <thead>
+            <tr>
+                <th style="text-align: right">Номер квартиры</th>
+                <th>Начислено</th>
+                <th>Месяц</th>
+                <th>Год</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in table %}
+                <tr>
+                    <th style="text-align: right">
+                        {{item.saldo_id.apartment_id}}
+                    </th>
+                    <td>{{item.value}} ₽</td>
+                    <td>{{item.month}} ({{ month_names|get_value_from_dict:item.month }})</td>
+                    <td>{{item.year}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}
