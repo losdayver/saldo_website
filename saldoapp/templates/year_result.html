@@ -2,7 +2,7 @@
 {% load saldoapp_extras %}
 
 {% block content %}
-    <h1 id="sitecontent_text">Отборная ведомость по квартире</h1>
+    <h1 id="sitecontent_text">Отборная ведомость за год</h1>
     <hr>
 
     <div class="tableform_box">
@@ -14,9 +14,9 @@
                 <input type="number" name="year" id="year" required="required">
             </div>
 
-            <label for="apartment_id">Номер квартиры:</label>
+            <label for="apartment_ids">Укажите через пробел номера квартир:</label>
             <div>
-                <input type="number" name="apartment_id" id="apartment_id" required="required">
+                <input type="text" name="apartment_ids" id="apartment_ids" required="required">
             </div>
 
             <input type="submit" value="Отфильтровать">
@@ -36,8 +36,8 @@
 
         <thead >
             <tr>
+                <th>Квартира</th>
                 <th>Изначальное сальдо</th>
-                <th> </th>
                 <th>Январь</th>
                 <th>Февраль</th>
                 <th>Матр</th>
@@ -54,29 +54,24 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td rowspan="2">{{ table|get_value_from_dict:'init_saldo' }}</td>
-                <td>начисления</td>
-                {% for payment in table|get_value_from_dict:'list_payments' %}
-                    <td>{{ payment }}</td>
-                {% endfor %}
-                <td style="border-right: 2px solid black;">{{ table|get_value_from_dict:'payments_sum' }}</td>
-            </tr>
-            <tr>
-                <td>выплаты</td>
-                {% for charge in table|get_value_from_dict:'list_charges' %}
-                    <td>{{ charge }}</td>
-                {% endfor %}
-                <td style="border-right: 2px solid black;">{{ table|get_value_from_dict:'charges_sum' }}</td>
-            </tr>
-            <tr>
-                <th colspan="14" style="text-align: right">Долг по квартире (с учётом изначального сальдо):</th>
-                <th colspan="14">{{ table|get_value_from_dict:'result' }}</th>
-            </tr>
+            {% for id in apartment_ids %}
+                <tr>
+                    <td>{{ id }}</td>
+                    <td>{{ apartments|get_value_from_dict:id|get_value_from_dict:'init_saldo' }}</td>
+                    {% for i in 12|times %}
+                    <td>
+                        <p>{{ apartments|get_value_from_dict:id|get_value_from_dict:'list_payments'|get_value_from_list:i }}</p>
+                        <p>{{ apartments|get_value_from_dict:id|get_value_from_dict:'list_charges'|get_value_from_list:i }}</p>
+                        <p>{{ apartments|get_value_from_dict:id|get_value_from_dict:'list_saldos'|get_value_from_list:i }}</p>
+                    </td>
+                    {% endfor %}
+                    <th>{{ apartments|get_value_from_dict:id|get_value_from_dict:'result' }}</th>
+                </tr>
+            {% endfor %}
         </tbody>
 
     </table>
     {% else %}
-        <p>Задайте значение фильтра для получения информации по квартире</p>
+        <p>Задайте значение фильтра для получения информации за год</p>
     {% endif %}
 {% endblock %}
