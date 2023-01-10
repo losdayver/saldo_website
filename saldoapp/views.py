@@ -133,9 +133,13 @@ def payments(response:HttpRequest):
                 to_month = response.GET.get('to_month')
 
                 table = Payment.objects.filter(year__gte=from_year, year__lte=to_year)
-
-                table = Payment.objects.filter(year__gte=from_year, year__lte=to_year)
                 table = table.filter(month__gte=from_month, month__lte=to_month)
+
+                try:
+                    table = table.filter(apartment_id=response.GET.get('apartment_id'))
+                except:
+                    pass
+
 
 
                 table = table.order_by('apartment_id', 'year', 'month')[::-1]
@@ -195,9 +199,13 @@ def charges(response):
                 from_month = response.GET.get('from_month')
                 to_month = response.GET.get('to_month')
 
-                table = Charge.objects.filter(year__gte=from_year, year__lte=to_year)
+                table = Payment.objects.filter(year__gte=from_year, year__lte=to_year)
                 table = table.filter(month__gte=from_month, month__lte=to_month)
-                print(table)
+
+                try:
+                    table = table.filter(apartment_id=response.GET.get('apartment_id'))
+                except:
+                    pass
 
                 table = table.order_by('apartment_id', 'year', 'month')[::-1]
                 filter_used = True
