@@ -40,9 +40,9 @@
             {% csrf_token %}
 
 
-            <label for="saldo_id">Укажите номер кваритры: </label>
+            <label for="apartment_id">Укажите номер кваритры: </label>
             <div>
-                <input type="number" name="saldo_id" id="saldo_id" required="required">
+                <input type="number" name="apartment_id" id="apartment_id" required="required">
             </div>
 
             <label for="value">Укажите сумму начисления: </label>
@@ -87,7 +87,7 @@
             {% for item in table %}
                 <tr>
                     <th style="text-align: right">
-                        {{item.saldo_id.apartment_id}}
+                        {{item.apartment_id}}
                     </th>
                     <td>{{item.value}} ₽</td>
                     <td>{{item.month}} ({{ month_names|get_value_from_dict:item.month }})</td>

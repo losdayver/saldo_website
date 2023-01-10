@@ -56,10 +56,11 @@ def payments(response:HttpRequest):
 
     if response.method == 'POST':
         try:
-            saldo_id = int(response.POST.get('saldo_id'))
+            apartment_id = int(response.POST.get('apartment_id'))
             value = float(response.POST.get('value'))
             month = int(response.POST.get('month'))
             year = int(response.POST.get('year'))
+            print(1)
 
             # Проверка на корректность данных
             if value <= 0:
@@ -72,12 +73,18 @@ def payments(response:HttpRequest):
 
             o = Payment()
 
-            o.saldo_id = InitialSaldo.objects.get(apartment_id=saldo_id)
+            print(1)
+
+            o.apartment_id = apartment_id
             o.value = value 
             o.month = month
             o.year = year
 
-            o.save() 
+            print(1)
+
+            o.save()
+
+            print(1)
         except:
             if len(error_message) == 0:
                 error_message = 'Ошибка! Проверьте корректность данных и попробуйте еще раз'
@@ -117,7 +124,7 @@ def charges(response):
 
     if response.method == 'POST':
         try:
-            saldo_id = int(response.POST.get('saldo_id'))
+            apartment_id = int(response.POST.get('apartment_id'))
             value = float(response.POST.get('value'))
             month = int(response.POST.get('month'))
             year = int(response.POST.get('year'))
@@ -133,7 +140,7 @@ def charges(response):
 
             o = Charge()
 
-            o.saldo_id = InitialSaldo.objects.get(apartment_id=saldo_id)
+            o.apartment_id = apartment_id
             o.value = value
             o.month = month
             o.year = year
@@ -184,31 +191,26 @@ def apartment(response):
 
                 table = {}
 
-                apartment = InitialSaldo.objects.get(apartment_id=apartment_id, year=year)
-
-                table['init_saldo'] = apartment.value
+                init_saldo = InitialSaldo.objects.get(apartment_id=apartment_id, year=year).value
+                table['init_saldo'] = init_saldo
 
                 list_payments = [0,] * 12
-
                 payments_sum = 0
 
                 list_charges = [0,] * 12
-
                 charges_sum = 0
 
-                payments = Payment.objects.filter(saldo_id=apartment, year=year)
+                payments = Payment.objects.filter(apartment_id=apartment_id, year=year)
 
                 for p in payments:
                     list_payments[p.month-1] = p.value
                     payments_sum += p.value
 
-                charges = Charge.objects.filter(saldo_id=apartment, year=year)
+                charges = Charge.objects.filter(apartment_id=apartment_id, year=year)
 
                 for c in charges:
                     list_charges[c.month-1] = c.value
                     charges_sum += c.value
-
-                print(list_charges)
 
                 table['list_payments'] = list_payments
                 table['list_charges'] = list_charges
@@ -216,11 +218,9 @@ def apartment(response):
                 table['payments_sum'] = payments_sum
                 table['charges_sum'] = charges_sum
 
-                table['result'] = payments_sum - charges_sum + apartment.value
-
-                #payments = Payment.objects.all()
-
                 print(table)
+
+                table['result'] = payments_sum - charges_sum + init_saldo
 
                 filter_used = True
             except:
